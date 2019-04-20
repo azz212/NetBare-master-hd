@@ -36,3 +36,4 @@ public interface NetBareListener {
     void onServiceStopped();
 
 }
+

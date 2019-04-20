@@ -70,7 +70,7 @@ public final class HttpInjectInterceptor extends HttpIndexedInterceptor {
             return;
         }
         if (index == 0) {
-            mShouldInjectResponse = mHttpInjector.sniffResponse(chain.response());
+            mShouldInjectResponse = mHttpInjector.sniffResponse(chain.response(), new HttpRawBody(buffer));
         }
         if (!mShouldInjectResponse) {
             chain.process(buffer);

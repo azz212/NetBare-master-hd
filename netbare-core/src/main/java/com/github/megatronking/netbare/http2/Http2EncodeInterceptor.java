@@ -163,6 +163,9 @@ public final class Http2EncodeInterceptor implements HttpInterceptor {
     private void encodeResponseData(HttpResponseChain chain, ByteBuffer buffer) throws IOException {
         byte[] data = Arrays.copyOfRange(buffer.array(), buffer.position(), buffer.limit());
         HttpResponse response = chain.response();
+
+
+
         sendDataFrame(chain, data, response.clientHttp2Settings(), response.streamId(),
                 response.responseStreamEnd());
     }

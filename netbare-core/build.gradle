@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 22
 
     defaultConfig {
         minSdkVersion 21
@@ -20,10 +20,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
-
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.56'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.56'
     implementation 'com.google.guava:guava:19.0'

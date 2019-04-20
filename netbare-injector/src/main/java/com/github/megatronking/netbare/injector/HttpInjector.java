@@ -52,7 +52,7 @@ public interface HttpInjector {
      * @param response Http response session.
      * @return True if do injection to this response.
      */
-    boolean sniffResponse(@NonNull HttpResponse response);
+    boolean sniffResponse(@NonNull HttpResponse response, @NonNull HttpBody body);
 
     /**
      * Inject the http request header part, call {@link InjectorCallback#onFinished(Stream)} after

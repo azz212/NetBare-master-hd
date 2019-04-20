@@ -39,7 +39,7 @@ public abstract class SimpleHttpInjector implements HttpInjector {
     }
 
     @Override
-    public boolean sniffResponse(@NonNull HttpResponse response) {
+    public boolean sniffResponse(@NonNull HttpResponse response, @NonNull HttpBody body) {
         return false;
     }
 

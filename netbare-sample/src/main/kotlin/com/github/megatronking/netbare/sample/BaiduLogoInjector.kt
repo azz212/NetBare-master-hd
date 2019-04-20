@@ -24,7 +24,7 @@ class BaiduLogoInjector : SimpleHttpInjector() {
         const val TAG = "BaiduLogoInjector"
     }
 
-    override fun sniffResponse(response: HttpResponse): Boolean {
+    override fun sniffResponse(response: HttpResponse,body :HttpBody ): Boolean {
         // 请求url匹配时才进行注入
         val shouldInject = "https://m.baidu.com/static/index/plus/plus_logo.png".equals(
                 response.url())

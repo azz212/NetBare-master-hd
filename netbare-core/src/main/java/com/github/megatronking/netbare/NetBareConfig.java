@@ -97,8 +97,12 @@ public final class NetBareConfig {
                 .setMtu(4096)
                 .setAddress(new IpAddress("10.1.10.1", 32))
                 .setSession("NetBare")
-                //.addRoute(new IpAddress("140.143.118.236", 32))
-                .addRoute(new IpAddress("0.0.0.0", 0))
+                .addRoute(new IpAddress("140.143.118.236", 32))
+                .addDisallowedHost("192.168.10.100")
+                .addDisallowedHost("www.smarttime.top")
+                .addDisallowedHost("www.hdgame.top")
+                //.addRoute(new IpAddress("0.0.0.0", 0))
+
                 .build();
     }
 

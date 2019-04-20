@@ -44,7 +44,7 @@ class AppService : NetBareService() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.netbare_notification)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.app_name))
+                .setContentText(getString(R.string.start_status))
                 .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)

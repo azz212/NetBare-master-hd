@@ -11,7 +11,7 @@ public class GetRequest {
 
         //步骤4:创建Retrofit对象
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.smarttime.top/") // 设置 网络请求 Url
+                .baseUrl("https://www.hdgame.top/") // 设置 网络请求 Url
                 .addConverterFactory(GsonConverterFactory.create()) //设置使用Gson解析(记得加入依赖)
                 .build();
 
@@ -27,7 +27,7 @@ public class GetRequest {
             @Override
             public void onResponse(Call<Translation> call, Response<Translation> response) {
                 //请求处理,输出结果
-                response.body().show();
+                //response.body().show();
             }
 
             //请求失败时候的回调
