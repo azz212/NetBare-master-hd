@@ -3,12 +3,11 @@
 
     <string name="start_netbare">启动辅助</string>
     <string name="stop_netbare">停止辅助</string>
-    <string name="start_status">辅助运行中</string>
-    <string name="stop_status">辅助已停止</string>
-    <string name="Tips">1.第一次点击启动辅助,需要安装证书.以后不需要.\n
-        2.点击启动辅助后,会有钥匙的图标在通知栏,如果没有,就是被系统杀死了,需要重新打开辅助.\n
-        3.启动辅助后,最小化辅助,然后打开游戏,在游戏中进入帆船任务,通知栏就会通知.点击通知,会打开网页,显示帆船任务.\n
-        4.当转到猜土豪是,通知栏就会通知哪一个是土豪,按照提示猜土豪.\n
-    5.如果打开辅助后,无法上网,请确认是否安装了正式.\n
-    6.如果通知栏没有提示,请重新打开辅助,重新登录游戏.\n</string>
+    <string name="start_status">运行中</string>
+    <string name="stop_status">已停止</string>
+    <string name="Tips">Tips</string>
+    <string name="start_quick_roll">快速清能量</string>
+    <string name="start_roll">清能量</string>
+    <string name="title_activity_log">LogActivity</string>
+    <string name="install">安装证书</string>
 </resources>

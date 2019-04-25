@@ -8,7 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat.getSystemService
 import android.util.Log
@@ -21,10 +23,7 @@ import com.github.megatronking.netbare.injector.InjectorCallback
 import com.github.megatronking.netbare.injector.SimpleHttpInjector
 import com.github.megatronking.netbare.io.HttpBodyInputStream
 import com.github.megatronking.netbare.stream.ByteStream
-import com.google.gson.JsonElement
-import com.google.gson.JsonIOException
-import com.google.gson.JsonParseException
-import com.google.gson.JsonParser
+import com.google.gson.*
 import org.json.JSONException
 import java.io.*
 import java.util.zip.DeflaterOutputStream
@@ -42,10 +41,18 @@ class WechatLocationInjector : SimpleHttpInjector() {
     var responsebody:String = ""
     var url:String =""
     var requestbody:String =""
+    //定义用户信息
+    private lateinit var secret:String
+    private lateinit var token:String
+    private var uid=0
+    private var isroll=true
+
+    private var mOnResponseListener: PostRequest.OnResponseListener? = null
+    var postRequest = PostRequest()
+
     companion object {
         const val TAG = "WechatLocationInjector"
     }
-
     private var mHoldResponseHeader: HttpResponseHeaderPart? = null
 
     override fun sniffResponse(response: HttpResponse,body :HttpBody): Boolean {
@@ -98,7 +105,23 @@ class WechatLocationInjector : SimpleHttpInjector() {
                 val edata= element.asJsonObject.get("edata")
                 val errcode= element.asJsonObject.get("errcode")
                 val errmsg= element.asJsonObject.get("errmsg")
+                //todo edata是一个base64+zlib 压缩后的字符串,python代码已经解开了.安卓的看怎么解开
+                //todo 举例:
+                /*
+                edata="H4sIAAAAAAAA/6pWKkrNTczMC85ILEp1zi/NK1GyMtBRSsqvcM1LLUqvBPOyUyuhUiY6SnmpFSVg1e6JmXlwRbUAAAAA//8=",
+                解出来的原始字符串应该是 {"remainShareCount":0,"boxEnergy":0,"keyCount":4,"nextShareGainEnergy":0}
+                python代码是
+                compresseddata=base64.b64decode(edata)
 
+                result = zlib.decompressobj(31).decompress(compresseddata).decode('utf-8')
+                print(result)
+                举例2
+                加密后:
+                edata="H4sIAAAAAAAA/+yVQWs6MRDFv8s755Cs+v9rjt4KpRQrvZQeojuugWxmSbKui+x3L0ZbaU89VthbJu9l+DG8MCdwm5o2Rei3E2JbQyuBZEvouRreBRq2/qq251sp4E1N0IDAnkz5UFeXYhu48zE7KvIlhXy08dU20DvjIgk0gQ/WbylLW5v6q+c52IN1VNGXMyaT2niV18HcekTP3dI493SGPbdhxwF6Ii74UsBRFaGLQfx1ZvWTWY3MI/OFubjDPI9/cJzzr/N8j3POK/GbWf0XKG31+TASldBqMZMTNRcItAsU9yuqjfXQhfonpcCGjy83lM76RGFJzuVyw8dH03Ob1n1DOZ4bPq6oM6GEPoE8haqHLqRAzZ566Nl0uphJOQwfAAAA//8="
+                原始字符串是
+                {"outputs":[{"sum":1,"tid":81}],"points":[{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":3,"sum":0,"legs":2},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":1,"sum":0,"legs":1},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":1,"sum":0,"legs":1},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":1,"sum":0,"legs":1},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":2,"sum":0,"legs":2},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":3,"sum":0,"legs":2},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":1,"sum":0,"legs":1},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":3,"sum":0,"legs":2},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":2,"sum":0,"legs":1},{"uid":0,"name":"","headImg":"","crowns":0,"gender":0,"isVip":false,"province":0,"city":0,"isPrivilege":false,"status":0,"isTrap":false,"snowBallNum":0,"color":3,"sum":0,"legs":1}],"snowBallNum":17,"digNum":0,"seed":1950318,"refreshRemain":21600,"boxStatus":0,"winterBell":0,"boxLayoutType":1,"boxReward":{"energy":20,"money":5449500}}
+
+                 */
                 Log.i(TAG, edata.toString())
                 Log.i(TAG, errcode.toString())
                 Log.i(TAG, errmsg.toString())
@@ -106,6 +129,10 @@ class WechatLocationInjector : SimpleHttpInjector() {
                     return
                 }
                 //获得response和url后,将数据传给远端接口地址
+                //如果是login请求,则解析token,uid,secret
+                if (url=="https://pirate-api.hortor002.com/game/basic/login"){
+                    parse_login(edata)
+                }
                 var posturl=""
                 requestbody.replace("&","$",true)
 
@@ -114,7 +141,10 @@ class WechatLocationInjector : SimpleHttpInjector() {
                 //Looper.prepare()
                 //var datas:PostRequest?=null;
                 //datas= PostRequest()
-                PostRequest().request(url,response.method().toString(),requestbody,element)
+                //在这里直接赋值 url,requestbody
+                mOnResponseListener?.let { postRequest.setOnResponseListener(it) }
+
+                postRequest.request(url,response.method().toString(),requestbody,element)
                 //Looper.loop();
                 responsebody=""
             }
@@ -139,8 +169,6 @@ class WechatLocationInjector : SimpleHttpInjector() {
 
             val injectBodyData = bos.toByteArray()
             */
-
-
             Log.i(TAG, "Inject wechat location completed!")
 
         }catch( e: JsonParseException) {
@@ -203,7 +231,49 @@ class WechatLocationInjector : SimpleHttpInjector() {
 
 
     }
+    fun parse_login(responsedata:JsonElement){
+        token="";
+        secret=""
+        uid=0
 
+    }
+    fun roll(){
+        if (isroll==true){
+            //PostRequest()
+            Log.i(TAG,"START TO ROLL")
+        }
+        else{
 
+            Log.i(TAG,"STOP TO ROLL")
+        }
 
+        //PostRequest().request(url,response.method().toString(),requestbody,element)
+    }
+    fun stoproll(){
+        //PostRequest()
+        isroll=false
+        //PostRequest().request(url,response.method().toString(),requestbody,element)
+    }
+    fun test(){
+        mOnResponseListener?.let { postRequest.setOnResponseListener(it) }
+        mHandler.sendEmptyMessageDelayed(1,3000)
+    }
+
+    private val mHandler = object : Handler() {
+
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                1->{
+                    postRequest.testSend()
+                    sendEmptyMessageDelayed(1,3000)
+                }
+            }
+
+        }
+
+    }
+
+    fun setOnResponseListener(onResponseListener: PostRequest.OnResponseListener){
+        mOnResponseListener = onResponseListener
+    }
 }

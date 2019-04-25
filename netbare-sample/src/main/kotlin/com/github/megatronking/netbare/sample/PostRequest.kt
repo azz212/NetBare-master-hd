@@ -26,6 +26,12 @@ import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.json.JSONArray
 import org.json.JSONObject
+import android.media.MediaCodec.MetricsConstants.MODE
+import android.os.Handler
+import android.os.Message
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 /**
  * Created by Carson_Ho on 17/3/21.
@@ -33,9 +39,12 @@ import org.json.JSONObject
 
 class PostRequest() {
 
+    private var mOnResponseListener:OnResponseListener? = null
     fun request(posturl: String, method: String, requestdata: String, responsedata: JsonElement) {
         val intent = Intent()
         val title = "海盗助手"
+        var result=""
+
         var obj = JSONObject()
         //步骤4:创建Retrofit对象
         val retrofit = Retrofit.Builder()
@@ -57,23 +66,34 @@ class PostRequest() {
 
                 obj.put("result",response.body().getResult())
                 obj.put("url",response.body().getUrl())
+                result=obj.get("result").toString()
+                result="test111"
+                if(result!=""){
 
-                if(obj.get("result").toString()!=""){
+                    //todo 此处需要将obj里面的result字符串显示到MainActivity界面的textview中.
+                    //todo 要求Textview一行一条消息,消息前面有系统时间,如果超过界面显示范围,自动滚动到最下面一行.
+
+                    //mHandler.sendEmptyMessage(0x123)
                     MainActivity.sendmsg(title,obj)
+
+                    sendResultToMain(result)
+
                 }
 
-
-
             }
+
 
             //请求失败时回调
             override fun onFailure(call: Call<Translation>, throwable: Throwable) {
                 println("请求失败")
                 println(throwable.message)
-                obj.put("result","获取数据失败,请重新打开辅助和游戏")
+                obj.put("result","获取数据失败")
                 obj.put("url","")
-                if(obj.get("result").toString()!=""){
+                result=obj.get("result").toString()
+                result="test111"
+                if(result!=""){
                     MainActivity.sendmsg(title,obj)
+                    sendResultToMain(result)
                 }
             }
 
@@ -84,7 +104,24 @@ class PostRequest() {
 
         private val NOTIFYID_1 = 1
     }
+    fun setOnResponseListener(onResponseListener:OnResponseListener){
+        mOnResponseListener = onResponseListener
+    }
 
+    interface OnResponseListener{
+        fun onSuccess(result: String)
+        fun onFailure(msg: String)
+    }
 
+    private fun sendResultToMain(result : String){
+        val time = System.currentTimeMillis()
+        val date = Date(time)
+        val format = SimpleDateFormat("MM-dd HH:mm:ss")
+        mOnResponseListener?.onSuccess("["+format.format(date)+"] "+result+"\n")
+    }
+
+    fun testSend(){
+        sendResultToMain("log test test test test test test test test test test >>>> .....")
+    }
 
 }

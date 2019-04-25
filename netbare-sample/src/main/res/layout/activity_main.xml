@@ -1,43 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#3354fc"/>
 
-    <Button
-        android:id="@+id/action"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="wrap_content"
+    <!-- 定义第一个表格布局，指定第2列允许收缩，第3列允许拉伸 -->
+    <TableLayout
+        android:id="@+id/TableLayout01"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
-        android:text="@string/start_netbare"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
-        android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/design_default_color_primary_dark"
-        android:textSize="18sp"
-        android:typeface="sans"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.038" />
+        android:shrinkColumns="1"
+        android:stretchColumns="2">
+        <!-- 直接添加按钮，它自己会占一行 -->
+        <Button
+            android:id="@+id/action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_netbare"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="18sp" />
+        <!-- 添加一个表格行 -->
+        <TableRow>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="如果第一次点击启动辅助没有安装证书,请手动点击安装证书"
+                android:textColor="@color/colorPrimary" />
+
+        </TableRow>
+
+        <TableRow>
+            <!-- 为该表格行添加三个按钮 -->
+            <Button
+                android:id="@+id/install"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="@string/install" />
+
+
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#3354fc"/>
+
+    <!-- 定义第2个表格布局 ，指定第2列隐藏-->
+    <TableLayout
+        android:id="@+id/TableLayout02"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- 直接添加按钮，它自己会占一行 -->
+        <Button
+            android:id="@+id/ok5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清能量操作(不保证100%安全)" />
+        <!-- 添加一个表格行 -->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+            <!-- 为该表格行添加三个按钮 -->
+            <Button
+                android:id="@+id/start_roll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_roll" />
+
+            <Button
+                android:id="@+id/start_quick_roll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_quick_roll" />
+
+        </TableRow>
+
+
+
+    </TableLayout>
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="570dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:fadeScrollbars="false"
         android:fontFamily="sans-serif-light"
-        android:text="@string/Tips"
+        android:scrollbars="vertical"
         android:textColor="@color/design_default_color_primary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/action"
+
         tools:text="@string/Tips" />
 
-</android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

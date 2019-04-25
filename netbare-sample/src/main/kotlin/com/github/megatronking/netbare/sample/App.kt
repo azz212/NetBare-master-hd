@@ -10,7 +10,7 @@ import me.weishu.reflection.Reflection
 class App : Application() {
 
     companion object {
-        const val JSK_ALIAS = "NetBareSample"
+        const val JSK_ALIAS = "NetHaidao"
 
         private lateinit var sInstance: App
 

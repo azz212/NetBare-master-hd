@@ -10,7 +10,7 @@ android {
             storePassword '123456aa'
         }
     }
-    compileSdkVersion 22
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.github.megatronking.netbare.sample"
         minSdkVersion 21
